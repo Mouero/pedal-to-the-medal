@@ -3,6 +3,15 @@
 /.idea/workspace.xml
 
 .idea/
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/pedal-to-the-medal.iml
+.idea/vcs.xml
+
 .idea/misc.xml
 
 target/
+untitled.iml
+pedal-to-the-medal.iml
+
+
