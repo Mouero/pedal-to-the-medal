@@ -2,15 +2,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import feign.Feign;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import petstore.api.PetApi;
 import petstore.model.Category;
 import petstore.model.Order;
 import petstore.model.Pet;
@@ -22,8 +25,9 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class Study {
+import static io.qameta.allure.Allure.step;
 
+public class Study {
     private String url = "http://localhost";
     private int port = 8080;
     private String basePath = "/api/v3";
@@ -76,6 +80,7 @@ public class Study {
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+
         Order orderRequest = new Order();
         orderRequest
                 .id(1L)
@@ -92,5 +97,11 @@ public class Study {
         Order getStoreOrderIdResponse = restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), Order.class).getBody();
 
         Assert.assertEquals(orderRequest, getStoreOrderIdResponse);
+    }
+
+    @Test
+    public void test(){
+
+
     }
 }
