@@ -7,8 +7,9 @@
 .idea/jarRepositories.xml
 .idea/pedal-to-the-medal.iml
 .idea/vcs.xml
-
 .idea/misc.xml
+
+allure-results/
 
 target/
 untitled.iml
