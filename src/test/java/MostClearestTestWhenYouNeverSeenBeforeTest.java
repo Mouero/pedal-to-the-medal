@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -25,20 +26,18 @@ public class MostClearestTestWhenYouNeverSeenBeforeTest {
     private static final int PORT = 8080;
     private static final String BASE_PATH = "/api/v3";
     private final RestTemplate restTemplate = new RestTemplate();
-    private UriComponentsBuilder baseUri;
-    private String uriPost;
-    private String uriGet;
     private HttpHeaders headers;
-    private HttpEntity<String> requestEntity;
+    private String uriGet;
     private Pet petRequest;
 
     @SneakyThrows
-    @BeforeTest(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeTest() {
+        UriComponentsBuilder
         baseUri =
                 step("Создание базового URL", () ->
                         UriComponentsBuilder.fromHttpUrl(URL).port(PORT).path(BASE_PATH));
-        uriPost =
+        String uriPost =
                 step("Создание URI для POST /pet", () ->
                         baseUri.build() + "/pet");
 
@@ -69,15 +68,13 @@ public class MostClearestTestWhenYouNeverSeenBeforeTest {
                                 .withDefaultPrettyPrinter()
                                 .writeValueAsString(petRequest));
 
-        requestEntity = new HttpEntity<>(jsonRequestBody, headers);
+        step("Вызов запроса POST /pet для создания питомца", () ->
+                restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class));
     }
 
     @Story("GET /pet")
     @Test(description = "Метод GET /pet должен вернуть модель Pet")
     public void getPetIdShouldReturnPetTest() {
-
-        step("Вызов запроса POST /pet для создания питомца", () ->
-                restTemplate.exchange(uriPost, HttpMethod.POST, requestEntity, String.class));
 
         Pet getPetIdResponse =
                 step("Вызов запроса GET /pet/{petId} для получения созданного питомца", () ->
