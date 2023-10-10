@@ -1,31 +1,21 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import feign.Feign;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import petstore.api.PetApi;
 import petstore.model.Category;
 import petstore.model.Order;
 import petstore.model.Pet;
 import petstore.model.Tag;
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.List;
 
-import static io.qameta.allure.Allure.step;
+import java.util.List;
 
 public class Study {
     private String url = "http://localhost";
