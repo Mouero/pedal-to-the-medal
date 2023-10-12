@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.SneakyThrows;
@@ -9,10 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import petstore.model.Category;
-import petstore.model.Order;
-import petstore.model.Pet;
-import petstore.model.Tag;
+import petstore.model.*;
 
 
 import java.util.List;
@@ -50,7 +48,6 @@ public class Study {
         String jsonRequestBody = ow.writeValueAsString(petRequest);
 
         restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class);
-
         Pet getPetIdResponse = restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), Pet.class).getBody();
 
         Assert.assertEquals(petRequest, getPetIdResponse);
@@ -83,15 +80,47 @@ public class Study {
         String jsonRequestBody = ow.writeValueAsString(orderRequest);
 
         restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class);
-
         Order getStoreOrderIdResponse = restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), Order.class).getBody();
 
         Assert.assertEquals(orderRequest, getStoreOrderIdResponse);
     }
 
+
+
+    @SneakyThrows
     @Test
-    public void test(){
+    public void getUserByUserNameTest() throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
+
+        String uriPost = baseUri.build() + "/user";
+        String uriGet = baseUri.build() + "/user/Anton";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        User userRequest = new User();
+        userRequest
+                .id(5L)
+                .username("Mouero")
+                .firstName("Anton")
+                .lastName("Dubovy")
+                .email("anton.bud@yandex.ru")
+                .password("pass123654")
+                .phone("8 999 452-46-71")
+                .userStatus(2);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonRequestBody = ow.writeValueAsString(userRequest);
+
+        restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class);
+        User getUserByUserName = restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), User.class).getBody();
+
+        Assert.assertEquals(userRequest, getUserByUserName);
 
 
     }
+
 }
