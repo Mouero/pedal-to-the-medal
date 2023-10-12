@@ -89,12 +89,12 @@ public class Study {
 
     @SneakyThrows
     @Test
-    public void getUserByUserNameTest() throws JsonProcessingException {
+    public void getUserByUserNameTest(){
         RestTemplate restTemplate = new RestTemplate();
-        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
+        String baseUri = "http://localhost:8080/api/v3";
 
-        String uriPost = baseUri.build() + "/user";
-        String uriGet = baseUri.build() + "/user/Anton";
+        String uriPost = baseUri + "/user";
+        String uriGet = baseUri + "/user/Mouero";
 
         HttpHeaders headers = new HttpHeaders();
 
