@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import petstore.api.PetApi;
 import petstore.model.*;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static io.qameta.allure.Allure.step;
 
@@ -66,26 +68,17 @@ public class Study {
 
 
     @SneakyThrows
-    @Test
-    public void getStoreOderByIdTest() {
+    @Test(dataProvider = "getStoryOrder")
+    public void getStoreOderByIdTest(Order orderRequest, String id) {
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
 
         String uriPost = baseUri.build() + "/store/order";
-        String uriGet = baseUri.build() + "/store/order/1";
+        String uriGet = baseUri.build() + "/store/order/"+id;
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
-
-        Order orderRequest = new Order();
-        orderRequest
-                .id(1L)
-                .petId(1978L)
-                .quantity(4)
-                .status(Order.StatusEnum.PLACED)
-                .complete(true);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String jsonRequestBody = ow.writeValueAsString(orderRequest);
@@ -132,6 +125,75 @@ public class Study {
         } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    @SneakyThrows
+    @Test(dataProvider = "bodyData")
+    public void postGetUserByUserNameTest(User userRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
+
+        String uriPost = baseUri.build() + "/user";
+        String uriGet = baseUri.build() + "/user/Mouero";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonRequestBody = ow.writeValueAsString(userRequest);
+
+        restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class);
+        User getStoreOrderIdResponse = restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), User.class).getBody();
+
+        Assert.assertEquals(userRequest, getStoreOrderIdResponse);
+    }
+
+    @DataProvider(name = "bodyData")
+    public Object[][] bodyData() {
+        return new Object[][]{
+                {
+                        new User().id(64L)
+                                .username("Mouero")
+                                .firstName("Anton")
+                                .lastName("Dubovyy")
+                                .email("anton.dubovyy@yandex,ru")
+                                .password("12345678")
+                                .phone("8 999 452-46-71")
+                                .userStatus(1)},
+                {
+                        new User().id(65L)
+                                .username("MAZDA")
+                                .firstName("Demio")
+                                .lastName("azazaz")
+                                .email("zazazaazza@yandex,ru")
+                                .password("322")
+                                .phone("1232154215")
+                                .userStatus(2)}
+
+        };
+    }
+    @DataProvider(name = "getStoryOrder")
+    public Object[][] getStoryOrder() {
+        return new Object[][]{
+                {
+                        new Order()
+                                .id(1L)
+                                .petId(1978L)
+                                .quantity(4)
+                                .status(Order.StatusEnum.PLACED)
+                                .complete(true)
+                        ,"1"
+                },
+                {
+                        new Order()
+                                .id(2L)
+                                .petId(1911L)
+                                .quantity(5)
+                                .status(Order.StatusEnum.DELIVERED)
+                                .complete(false)
+                        ,"2"
+                }
+        };
     }
 }
