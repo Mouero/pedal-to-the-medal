@@ -9,15 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import petstore.api.PetApi;
-import petstore.model.Category;
-import petstore.model.Order;
-import petstore.model.Pet;
-import petstore.model.Tag;
+import petstore.model.*;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -100,8 +98,40 @@ public class Study {
     }
 
     @Test
-    public void test(){
+    public void justGetPetExceptionTest() {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
 
+        String uriGet = baseUri.build() + "/pet/8373";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+
+        HttpClientErrorException exception =
+                Assert.expectThrows(
+                        HttpClientErrorException.NotFound.class,
+                        () -> restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), Pet.class)
+                );
+        System.out.println(exception.toString());
+    }
+
+    @Test
+    public void getUserByUserNameBadRequestExceptionTest() {
+
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
+
+        String uriGet = baseUri.build() + "/user/Anton";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+        try {
+            restTemplate.exchange(uriGet, HttpMethod.GET, new HttpEntity<>(headers), User.class);
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 }
