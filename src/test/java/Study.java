@@ -153,7 +153,8 @@ public class Study {
     public Object[][] bodyData() {
         return new Object[][]{
                 {
-                        new User().id(64L)
+                        new User()
+                                .id(64L)
                                 .username("Mouero")
                                 .firstName("Anton")
                                 .lastName("Dubovyy")
@@ -162,7 +163,8 @@ public class Study {
                                 .phone("8 999 452-46-71")
                                 .userStatus(1)},
                 {
-                        new User().id(65L)
+                        new User()
+                                .id(65L)
                                 .username("MAZDA")
                                 .firstName("Demio")
                                 .lastName("azazaz")
@@ -190,6 +192,7 @@ public class Study {
                                 .id(2L)
                                 .petId(1911L)
                                 .quantity(5)
+//                                .shipDate()
                                 .status(Order.StatusEnum.DELIVERED)
                                 .complete(false)
                         ,"2"
