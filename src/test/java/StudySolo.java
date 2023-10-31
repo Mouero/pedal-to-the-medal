@@ -30,16 +30,16 @@ public class StudySolo {
     @BeforeMethod(alwaysRun = true)
     public void beforeTest() {
 
-        UriComponentsBuilder
+        String
                 baseUri =
                 step("Создание базового URL", () ->
-                        UriComponentsBuilder.fromHttpUrl(URL).port(PORT).path(BASE_PATH));
+                        "http://localhost:8080/api/v3");
         String uriPost =
                 step("Создание URI для запроса Post/user", () ->
-                        baseUri.build() + "/user");
+                        baseUri + "/user");
         uriGet =
                 step("Создание URI для запроса Get/user/Mouero", () ->
-                        baseUri.build() + "/user/Mouero");
+                        baseUri + "/user/Mouero");
 
         headers = new HttpHeaders();
         step("Создание хедеров", () -> {
@@ -77,30 +77,30 @@ public class StudySolo {
         SoftAssert softAssert = new SoftAssert();
 
         step("Сравнение ожидаемого и фактического результата", () -> {
-                step("Сравнение по Id", () ->
+                step("Сравнение по id", () ->
                         softAssert.assertEquals(userRequest.getId(), getUserByUserName.getId(),
                                 "Поле id не совпадает"));
-        step("Сравнение по Username", () ->
+        step("Сравнение по username", () ->
                 softAssert.assertEquals(userRequest.getUsername(), getUserByUserName.getUsername(),
                         "Поле username не совпадает"));
-        step("Сравнение по FirstName", () ->
+        step("Сравнение по firstName", () ->
                 softAssert.assertEquals(userRequest.getFirstName(), getUserByUserName.getFirstName(),
-                        "Поле FirstName не совпадает"));
-        step("Сравнение по LastName", () ->
+                        "Поле firstName не совпадает"));
+        step("Сравнение по lastName", () ->
                 softAssert.assertEquals(userRequest.getLastName(), getUserByUserName.getLastName(),
-                        "Поле LastName не совпадает"));
-        step("Сравнение по Email", () ->
+                        "Поле lastName не совпадает"));
+        step("Сравнение по email", () ->
                 softAssert.assertEquals(userRequest.getEmail(), getUserByUserName.getEmail(),
-                        "Поле Email не совпадает"));
-        step("Сравнение по Password", () ->
+                        "Поле email не совпадает"));
+        step("Сравнение по password", () ->
                 softAssert.assertEquals(userRequest.getPassword(), getUserByUserName.getPassword(),
-                        "Поле Password не совпадает"));
-        step("Сравнение по Phone", () ->
+                        "Поле password не совпадает"));
+        step("Сравнение по phone", () ->
                 softAssert.assertEquals(userRequest.getPhone(), getUserByUserName.getPhone(),
-                        "Поле Phone не совпадает"));
-        step("Сравнение по UserStatus", () ->
+                        "Поле phone не совпадает"));
+        step("Сравнение по userStatus", () ->
                 softAssert.assertEquals(userRequest.getUserStatus(), getUserByUserName.getUserStatus(),
-                        "Поле UserStatus не совпадает"));
+                        "Поле userStatus не совпадает"));
         });
     }
 
