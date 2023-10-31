@@ -33,7 +33,7 @@ public class StudySolo {
         String
                 baseUri =
                 step("Создание базового URL", () ->
-                        "http://localhost:8080/api/v3");
+                        URL + PORT + BASE_PATH);
         String uriPost =
                 step("Создание URI для запроса Post/user", () ->
                         baseUri + "/user");
