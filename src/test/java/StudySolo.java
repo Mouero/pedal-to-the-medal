@@ -18,7 +18,7 @@ import static io.qameta.allure.Allure.step;
 
 @Feature("User")
 public class StudySolo {
-    private static final String URL = "http://localhost";
+    private static final String URL = "http://localhost:";
     private static final int PORT = 8080;
     private static final String BASE_PATH = "/api/v3";
     private final RestTemplate restTemplate = new RestTemplate();
