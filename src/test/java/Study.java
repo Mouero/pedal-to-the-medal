@@ -13,7 +13,9 @@ import org.testng.annotations.Test;
 import petstore.model.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Study {
     private String url = "http://localhost";
@@ -86,15 +88,14 @@ public class Study {
     }
 
 
-
     @SneakyThrows
     @Test
-    public void getUserByUserNameTest(){
+    public void getUserByUserNameTest() {
         RestTemplate restTemplate = new RestTemplate();
-        String baseUri = "http://localhost:8080/api/v3";
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
 
-        String uriPost = baseUri + "/user";
-        String uriGet = baseUri + "/user/Mouero";
+        String uriPost = baseUri.build() + "/user";
+        String uriGet = baseUri.build() + "/user/Mouero";
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -123,4 +124,51 @@ public class Study {
 
     }
 
+    @SneakyThrows
+    @Test
+    public void postUserCreateWithListTest() {
+        RestTemplate restTemplate = new RestTemplate();
+        UriComponentsBuilder baseUri = UriComponentsBuilder.fromHttpUrl(url).port(port).path(basePath);
+
+        String uriPost = baseUri.build() + "/user/createWithList";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML_VALUE);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        User userRequest = new User();
+        userRequest
+                .id(5L)
+                .username("Mouero")
+                .firstName("Anton")
+                .lastName("Dubovy")
+                .email("anton.bud@yandex.ru")
+                .password("pass123654")
+                .phone("8 999 452-46-71")
+                .userStatus(2);
+
+        User newUserRequest = new User();
+        userRequest
+                .id(6L)
+                .username("Ostalf")
+                .firstName("Daniyar")
+                .lastName("Rakhymbek")
+                .email("daniyar.rakhymbek@yandex.ru")
+                .password("p3657904")
+                .phone("8 991 865-12-49")
+                .userStatus(1);
+        List<User> listUser = List.of(userRequest,newUserRequest);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonRequestBody = ow.writeValueAsString(listUser);
+
+        restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class);
+
+    }
+
 }
+
+
+
+
+

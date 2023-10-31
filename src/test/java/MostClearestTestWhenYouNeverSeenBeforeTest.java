@@ -6,13 +6,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import org.testng.util.TimeUtils;
 import petstore.model.Category;
 import petstore.model.Pet;
 import petstore.model.Tag;
@@ -22,28 +20,23 @@ import java.util.List;
 import static io.qameta.allure.Allure.step;
 
 @Feature("Pet")
-public class MostClearestTestWhenYouNeverSeenBeforeTest extends AbstractTestNGSpringContextTests {
+public class MostClearestTestWhenYouNeverSeenBeforeTest {
     private static final String URL = "http://localhost";
     private static final int PORT = 8080;
     private static final String BASE_PATH = "/api/v3";
     private final RestTemplate restTemplate = new RestTemplate();
-    private UriComponentsBuilder baseUri;
-    private String uriPost;
-    private String uriGet;
     private HttpHeaders headers;
-    private HttpEntity<String> requestEntity;
+    private String uriGet;
     private Pet petRequest;
 
     @SneakyThrows
-    @BeforeTest(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void beforeTest() {
+        UriComponentsBuilder
         baseUri =
                 step("Создание базового URL", () ->
-                        UriComponentsBuilder
-                                .fromHttpUrl(URL)
-                                .port(PORT)
-                                .path(BASE_PATH));
-        uriPost =
+                        UriComponentsBuilder.fromHttpUrl(URL).port(PORT).path(BASE_PATH));
+        String uriPost =
                 step("Создание URI для POST /pet", () ->
                         baseUri.build() + "/pet");
 
@@ -74,18 +67,13 @@ public class MostClearestTestWhenYouNeverSeenBeforeTest extends AbstractTestNGSp
                                 .withDefaultPrettyPrinter()
                                 .writeValueAsString(petRequest));
 
-        requestEntity = new HttpEntity<>(jsonRequestBody, headers);
+        step("Вызов запроса POST /pet для создания питомца", () ->
+                restTemplate.exchange(uriPost, HttpMethod.POST, new HttpEntity<>(jsonRequestBody, headers), String.class));
     }
 
-    @SneakyThrows
     @Story("GET /pet")
     @Test(description = "Метод GET /pet должен вернуть модель Pet")
     public void getPetIdShouldReturnPetTest() {
-
-        step("Вызов запроса POST /pet для создания питомца", () ->
-                restTemplate.exchange(uriPost, HttpMethod.POST, requestEntity, String.class));
-
-        Thread.sleep(3*1000);
 
         Pet getPetIdResponse =
                 step("Вызов запроса GET /pet/{petId} для получения созданного питомца", () ->

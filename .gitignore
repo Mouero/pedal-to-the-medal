@@ -1,13 +1,9 @@
 # Default ignored files
-/shelf/
-.idea/
 .allure/
-
-allure-results/
-
 
 target/
 untitled.iml
 pedal-to-the-medal.iml
 
-
+.idea/
+.idea

@@ -18,9 +18,31 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
-                <version>2.12.0</version>
+                <version>2.10.0</version>
+                <configuration>
+                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+                    <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
+                    <reportVersion>2.10.0</reportVersion>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -39,7 +61,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resource/swagger/petstore.yaml
+                                ${project.basedir}\src\main\resource\swagger\petstore.yaml
                             </inputSpec>
                             <library>feign</library>
                             <modelPackage>petstore.model</modelPackage>
@@ -66,7 +88,6 @@
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable -->
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -121,7 +142,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.8.0</version>
+            <version>7.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -138,8 +159,7 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
-            <version>2.14.0</version>
+            <version>2.22.2</version>
         </dependency>
-
     </dependencies>
 </project>
